@@ -1,10 +1,10 @@
 import React from "react";
 import logo from "../../assets/logo.png";
-import carrito from "../../assets/carrito.png";
 import { useState } from "react";
 import { Link, NavLink } from "react-router-dom";
 import { useEffect } from "react";
 import styles from "./Navbar.module.scss";
+import CartIcon from "../CartIcon";
 
 const Navbar = ({ children }) => {
   const [categorias, setCategorias] = useState([]);
@@ -36,8 +36,8 @@ const Navbar = ({ children }) => {
           ))}
         </ul>
       </nav>
-      <Link to="/carrito">
-        <img className={styles.cart} src={carrito} alt="Carrito de Compras" width={50} />
+      <Link to="/cart">
+        <CartIcon />
       </Link>
       {children}
     </header>

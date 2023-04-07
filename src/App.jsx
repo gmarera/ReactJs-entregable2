@@ -3,8 +3,10 @@ import Navbar from "./components/Navbar";
 import Home from "./components/Home";
 import ItemDetailContainer from "./components/ItemDetailContainer";
 import ItemListContainer from "./components/ItemListContainer";
-import Carrito from "./components/Carrito";
+import Cart from "./components/Cart";
+import Checkout from "./components/Checkout";
 import "./App.css";
+import { useEffect } from "react";
 
 function App() {
   return (
@@ -15,7 +17,8 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/categoria/:categoriaNombre" element={<ItemListContainer />} />
           <Route path="/libro/:id" element={<ItemDetailContainer />} />
-          <Route path="/carrito" element={<Carrito />} />
+          <Route path="/cart" element={<Cart />} />
+          <Route path="/checkout" element={<Checkout />} />
         </Routes>
       </main>
     </>
