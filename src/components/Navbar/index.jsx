@@ -21,12 +21,13 @@ const Navbar = ({ children }) => {
   return (
     <header className={styles.container}>
       <Link to="/">
-        <img className={styles.logo} src={logo} alt="readme.txt" />
+        <img className={styles.logo} src={logo} alt="readme.txt" title="Ir al Home" />
       </Link>
       <nav className={styles.nav}>
         <ul>
           {categorias.map((categoria, index) => (
             <NavLink
+              title={`Ir a la categoria ${categoria.name}`}
               key={index}
               to={`categoria/${categoria.name}`}
               style={({ isActive }) => (isActive ? activeStyle : undefined)}
@@ -36,7 +37,7 @@ const Navbar = ({ children }) => {
           ))}
         </ul>
       </nav>
-      <Link to="/cart">
+      <Link to="/cart" title="Ir al Carrito">
         <CartIcon />
       </Link>
       {children}

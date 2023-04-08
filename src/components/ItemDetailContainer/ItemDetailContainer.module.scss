@@ -32,6 +32,7 @@ $autor: #6b2b06;
 }
 
 .precio {
+  margin-top: 50px;
   font-size: 1.5rem;
   margin-bottom: 30px;
 }
@@ -47,7 +48,7 @@ $autor: #6b2b06;
   border-radius: 5px;
 
   &:hover {
-    background-color: #b80c09;
+    background-color: green;
     color: white;
   }
 }

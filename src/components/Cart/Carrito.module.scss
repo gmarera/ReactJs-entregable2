@@ -19,7 +19,7 @@
 }
 
 .imagen img {
-  height: 150px;
+  height: 200px;
 }
 
 .libro {
@@ -109,6 +109,21 @@
   margin-top: 20px;
   &:hover {
     background-color: green;
+    color: white;
+  }
+}
+
+.vaciar {
+  margin-right: 10px;
+  display: flex;
+  color: black;
+  padding: 10px;
+  border: 1px solid black;
+  border-radius: 10px;
+  font-size: 1.3rem;
+  margin-top: 20px;
+  &:hover {
+    background-color: red;
     color: white;
   }
 }

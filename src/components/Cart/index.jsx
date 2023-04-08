@@ -14,7 +14,7 @@ const Cart = () => {
       <div>
         {cartLibros && cartLibros.length > 0 ? (
           cartLibros.map((libro, index) => (
-            <div className={styles.cart_items} key={libro.index}>
+            <div className={styles.cart_items} key={libro.id}>
               <div className={styles.imagen}>
                 <img src={libro.img} alt={libro.titulo} />
               </div>
@@ -44,8 +44,17 @@ const Cart = () => {
           <p className={styles.emptyCart}>Aún no hay libros en el Carrito de Compras.</p>
         )}
         <div>
-          <h2 className={styles.total}>Precio Total: $ {precioTotal}</h2>
+          <h2 className={styles.total}>Total: $ {precioTotal}</h2>
           <div className={styles.frameCheckout}>
+            <button
+              className={styles.vaciar}
+              onClick={() => {
+                localStorage.removeItem("cartLibros");
+                window.location.reload();
+              }}
+            >
+              Vaciar Carrito
+            </button>
             <Link to="/checkout">
               <button className={styles.comprar}>Check-Out</button>
             </Link>

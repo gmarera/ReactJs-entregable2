@@ -2,31 +2,34 @@ import { useEffect, useState, useContext } from "react";
 import { useParams } from "react-router-dom";
 import stylesItemDetailContainer from "./ItemDetailContainer.module.scss";
 import { CartContext } from "../../context/CartContext";
+import { collection, getDocs } from "firebase/firestore";
+import db from "../../../db/firebase-config";
+import { ToastContainer, toast } from "react-toastify";
 
 const ItemDetailContainer = ({ data }) => {
   const { agregar } = useContext(CartContext);
-  const [libro, setLibro] = useState({});
-  const [loading, setLoading] = useState(true);
   const { id } = useParams();
+  const [loading, setLoading] = useState(true);
+  const [libro, setLibro] = useState([]);
+  const LibrosDb = collection(db, "libros");
+  const notify = () => toast("Libro agregado al carrito!");
+
+  const getLibros = async () => {
+    const librosCollection = await getDocs(LibrosDb);
+    const libros = librosCollection.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
+    const libroEncontrado = libros.find((libro) => libro.id == id);
+    setLibro(libroEncontrado);
+    setLoading(false);
+  };
 
   useEffect(() => {
-    fetch("/src/json/libros.json")
-      .then((response) => response.json())
-      .then((data) => {
-        const libroEncontrado = data.find((libro) => libro.id == id);
-        setLibro(libroEncontrado);
-        setLoading(false);
-      })
-      .catch((error) => {
-        console.log(error);
-        setLoading(false);
-      });
+    getLibros();
   }, [id]);
 
   return (
     <div>
       {loading ? (
-        <h1>Cargando...</h1>
+        <h1>Cargando libro...</h1>
       ) : libro ? (
         <section className={stylesItemDetailContainer.container}>
           <div className={stylesItemDetailContainer.imagen}>
@@ -39,14 +42,11 @@ const ItemDetailContainer = ({ data }) => {
             <p>Páginas: {libro.paginas}</p>
             <p>Categoría: {libro.categoria}</p>
             <p>ISBN: {libro.id}</p>
-            <br />
-            <br />
-            <br />
-            <br />
             <p className={stylesItemDetailContainer.precio}>Precio: ${libro.precio}</p>
             <button className={stylesItemDetailContainer.boton} onClick={() => agregar(libro)}>
               Agregar al carrito
             </button>
+            <ToastContainer />
           </div>
         </section>
       ) : (

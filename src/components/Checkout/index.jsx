@@ -3,9 +3,12 @@ import { CartContext } from "../../context/CartContext";
 import { useContext, useState } from "react";
 import { useForm } from "react-hook-form";
 import stylesCheckout from "./Checkout.module.scss";
+import db from "../../../db/firebase-config";
+import { addDoc, collection, getFirestore } from "firebase/firestore";
 
 function Checkout() {
   const { cartLibros, agregar, restar, borrar } = useContext(CartContext);
+  const [orderId, setOrderId] = useState("");
   const precioTotal = cartLibros.reduce((acc, libro) => acc + libro.precio * libro.cantidad, 0);
 
   const {
@@ -19,15 +22,36 @@ function Checkout() {
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
 
   const onSubmit = (data) => {
-    reset();
+    const db = getFirestore();
+    const ordersCollection = collection(db, "orders");
+    addDoc(ordersCollection, order).then((docRef) => {
+      setOrderId(docRef.id);
+    });
+
     setShowSuccessMessage(true);
     setTimeout(() => {
       window.location.href = "/";
-    }, 3000);
+    }, 7000);
+    reset();
+    localStorage.removeItem("cartLibros");
   };
 
+  const nombre = watch("nombre");
+  const apellido = watch("apellido");
+  const telefono = watch("telefono");
   const watchEmail1 = watch("email1");
   const watchEmail2 = watch("email2");
+
+  const order = {
+    cliente: {
+      nombre: nombre,
+      apellido: apellido,
+      telefono: telefono,
+      email: watchEmail1,
+    },
+    libros: cartLibros,
+    total: precioTotal,
+  };
 
   return (
     <div className={stylesCheckout.container}>
@@ -64,9 +88,19 @@ function Checkout() {
 
       <form className={stylesCheckout.formulario} onSubmit={handleSubmit(onSubmit)}>
         <div className={stylesCheckout.campo}>
-          <label htmlFor="name">Nombre: </label>
-          <input type="text" {...register("name", { required: true })} />
-          {errors.name && <span>Este campo es requerido.</span>}
+          <label htmlFor="nombre">Nombre: </label>
+          <input type="text" {...register("nombre", { required: true })} />
+          {errors.nombre && <span>Este campo es requerido.</span>}
+        </div>
+        <div className={stylesCheckout.campo}>
+          <label htmlFor="apellido">Apellido: </label>
+          <input type="text" {...register("apellido", { required: true })} />
+          {errors.apellido && <span>Este campo es requerido.</span>}
+        </div>
+        <div className={stylesCheckout.campo}>
+          <label htmlFor="telefono">Teléfono: </label>
+          <input type="text" {...register("telefono", { required: true })} />
+          {errors.telefono && <span>Este campo es requerido.</span>}
         </div>
         <div className={stylesCheckout.campo}>
           <label htmlFor="email1">Email: </label>
@@ -79,7 +113,14 @@ function Checkout() {
           {errors.email2 && <span> Este campo es requerido.</span>}
           {watchEmail1 !== watchEmail2 && <span> Los correos electrónicos no coinciden.</span>}
         </div>
-        {showSuccessMessage && <div className={stylesCheckout.ok}>¡Su compra se procesó con éxito!. Gracias.</div>}
+        {showSuccessMessage && orderId && (
+          <div>
+            <div className={stylesCheckout.ok}> ¡Compra Exitosa!</div>
+            <div>
+              ID: <span className={stylesCheckout.id}>{orderId}</span>
+            </div>
+          </div>
+        )}
         <button type="submit" className={stylesCheckout.button}>
           Enviar
         </button>
